@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<!--
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Projectile system overview</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<h1 id="logo">
+				</h1>
+				
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						
+						<li>
+							<a href="#">Synthetik2</a>
+							<ul>
+								<li><a href="Synthetik2Overview.html">Overview</a></li>
+								<li><a href="ContentManagement.html">Content Management</a></li>
+								<li><a href="ProjectileSystem.html">Projectile System</a></li>
+								<li><a href="Synthetik2UI.html">UI</a></li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="IntelExperience.html">Intel</a>
+						</li>
+						<li></li>
+
+					</ul>
+				</nav>
+			</header>
+
+			<!-- Main -->
+				<div id="main" class="wrapper style1">
+					<div class="container">
+						<header class="major">
+							<h2>Projectile system</h2>
+							<p>A short explanation about the unique projectile system and why I choose to develop it using Entity Component System</p>
+						</header>
+
+						<!-- Content -->
+							<section id="content">
+								<div class="video-wrap">
+									<video id="slide-video" controls width="100%" height="auto" onclick="playPause();" autoplay="true" preload="auto" loop muted>
+										<source src="images/ProjectileSystem.webm" type='video/webm' />
+									</video>
+								</div>								
+								<h3>Requirements</h3>
+								<p>
+									The projectile system is one of the core systems of Synthetik2 - as the game kind of revolves around shooting, a lot of shooting.
+									<br>
+									From the design standpoint a projectile can be used by multiple systems, such as weapons, traps, items, skills and more.
+									After inspecting the designers wishes and investigating the needs within the game I compiling its features and concluded the following: 
+									
+									<ul>
+										<li>The projectiles themselves should be able to move in various unique ways, from classic ballistic movement through laser beam to heat seeking rockets.</li>
+										<li>Each projectile can have unique actions added to it before or after its initialization. These actions can range from splitting the projectile on hit or reducing its movement speed.</li>
+										<li>Potentially tens if not hundred projectiles can be present at each frame and optimization is vital</li>
+										<li>Projectiles should be easy to sync by our multiplayer engineer.</li>
+									</ul>
+									
+									After reviewing these I decided to quickly create an OOP based system that takes advantage of Unity's GameObject and the ability to attach components to them.
+									In this first approach to the system the unique movement behaviors were components  that could be easily attached to a prefab of a projectile. 
+									This worked but had a few drawbacks which I wasn't happy with. 
+									Firstly the game object, prefab workflow with adding\removing its components presented overhead that seemed unnecessary for the system, especially considering we didn't need many of the prefab powerful workflow features.
+									Secondly, the big list of interactions needed from the projectile system behavior would create a complex system when viewed from OOP perspective, and while some design patterns simplified the solutions, the system wasn't simple.
+								</p>
+
+								<a href="#" class="image fit"><img src="images/ProjectileSystem.png" alt="" />Projectiles in action</a>
+
+								<h3>Moving to ECS</h3>
+								<p>
+									While working on this system I encountered some Unity <a href="https://www.youtube.com/watch?v=0_Byw9UMn9g">talks</a> about its DOTS package and the future of unity, and immediately saw the potential of implementing our projectile system using Entity Component System (ECS in short).
+									<br>
+									The reason I was so enthusiastic about ECS is that it provides a data-oriented design which allows a lot of flexibility while managing memory better, 
+									utilizing multithreading and using unity's burst compiler to greatly reduce performance, especially when compared with game object workflow.
+									With the blessing of the team lead I started implementing the system using ECS and was immediately blown away by its performance and flexibility. 
+									<br>
+									The ability to add behavior to an object by simply adding a data component to it allowed for easy integration of the projectile system's unique requirements which seemed complex when viewed through the OOP lens.
+									This also created a workflow where one could add a new behavior without the need to know or change other systems in one of the most elegant ways to follow the open closed principle.
+									Additionally, moving away from the game object workflow allowed me to step away from the “normal” way of working within unity and find better ways of handling certain behaviors such as ditching collision components for simple raycast and using managers to batch draw calls for mesh and particle system rendering.
+									<br>
+									Working in a data centric way also made defining the configurable data for our <a href="ContentManagement.html">"UniversEdit"</a> tool straight forward and syncing the projectiles between different game clients to a much easier task.
+									<br>
+									Choosing to implement our projectile system using ECS from the early stages proved to be one of our better technology decisions that kept the projectile system flexible and performant throughout the game's development.
+									<br>
+									<br>
+									Some early ECS system implementation notes:
+									<br>
+									<a href="#" class="image fit"><img src="images/ECSNotes.jpg" alt="" /></a>
+
+								</p>
+							</section>
+
+
+					</div>
+				</div>
+
+			<!-- Footer -->
+				<footer id="footer">
+					<ul class="icons">
+						<li><a href="https://www.linkedin.com/in/jonathan-yitzchaik-a32a921a7/" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+						<li><a href="https://github.com/JonIzaki?tab=repositories" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+						<li><a href=mailto:"j.yitzchaik@gmail.com" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

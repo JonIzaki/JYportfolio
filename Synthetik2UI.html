@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<!--
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Synthetik2 UI implementation</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<h1 id="logo">
+				</h1>
+				
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						
+						<li>
+							<a href="#">Synthetik2</a>
+							<ul>
+								<li><a href="Synthetik2Overview.html">Overview</a></li>
+								<li><a href="ContentManagement.html">Content Management</a></li>
+								<li><a href="ProjectileSystem.html">Projectile System</a></li>
+								<li><a href="Synthetik2UI.html">UI</a></li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="IntelExperience.html">Intel</a>
+						</li>
+						<li></li>
+
+					</ul>
+				</nav>
+			</header>
+
+			<!-- Main -->
+				<div id="main" class="wrapper style1">
+					<div class="container">
+						<header class="major">
+							<h2>UI implementations</h2>
+							<p>Some of the UI I implemented in Synthetik2</p>
+						</header>
+
+						<!-- Content -->
+							<section id="content">
+								<!-- <a href="#" class="image fit"><img src="images/ShootingGif.apng" alt="" /></a> -->
+								
+								<h3>Class Selection Screen</h3>
+								<p>
+									On this screen we aimed at conveying the complex class system where a main class contains multiple unlockable specializations, and each specialization has its own weapon and ability shop.
+									Other than presenting the menu without too much clutter we did add the play game button which was initially presented only at the lobby screen in order to streamline the single player experience.
+									As Synthetik2 supports heavy game modding, our designed UI is dynamic with its flexible elements container such as the class selection and the weapon unlock shop.
+									<br>
+									This class screen took us some iterations to reach its current state, and in this iterative process I learned the power of the observer pattern in UI implementation. 
+									Using a UI element as an observer allowed me to decouple the UI element from the underlying systems in a clean way that enabled faster and cleaner iteration process. 
+									As an example for that we can look at the abilities UI which only listens to <code>OnClassChanged(classID newClass)</code> event, which completely decouples the system that invoked the class change from the ability UI which presents the abilities of the newly selected class.
+									<br>
+									All of the UI systems - including the tab system, shop system, and unlockables - were implemented by me in a generic fashion where we could easily use them with other UI elements. 
+									
+									Other than the UI systems, this page contains multiple systems including serialization of the player's progress and loadout, automatic content update with mod changes, and the logic of starting a game session with the selected preferences.
+									<br><br>
+									<div class="video-wrap">
+										<video id="slide-video" controls width="100%" height="auto" onclick="playPause();" autoplay="true" poster="{% static 'images/endscreen.webm'%}" preload="auto" loop muted>
+											<source src="images/ClassSelection.webm" type='video/webm' />
+										</video>
+									</div>
+								</p>
+
+								<h3>Lobby UI</h3>
+								<p>
+									This screen supports presenting multiple players and has a listener UI elements that updates the difficulty percentage from two different systems -> the escalation and difficulty modifiers.
+									These two difficulty systems were implemented by me and they apply general difficulty for the current run which will affect the amount of experience and money gained.
+									Like most of the games UI this one also supports added content by mods as one can add difficulty modifiers through modding.
+									<br><br>
+									<a href="#" class="image fit"><img src="images/LobbyImage.jpg" alt="" /></a>
+								</p>
+
+								<h3>Endscreen</h3>
+								<p>
+									The endscreen is presented to the player(s) at the end of a run (a common occurrence in roguelite games) and shows a compact summary of the game.
+									Here I mainly designed data containers to be edited by the UI artist, as well as the "exp bar" where I exposed tweakable variables to the artist to work with, such as fill speed and acceleration.
+								
+									
+									<div class="video-wrap">
+										<video id="slide-video" controls width="100%" height="auto" onclick="playPause();" autoplay="true" poster="{% static 'images/endscreen.webm'%}" preload="auto" loop muted>
+											<source src="images/endscreen.webm" type='video/webm' />
+											<!-- <source src="{% static 'img/videos/1.mp4' %}" type='video/mp4' /> -->
+										</video>
+									</div>
+								</p>
+							</section>
+
+
+					</div>
+				</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<ul class="icons">
+					<li><a href="https://www.linkedin.com/in/jonathan-yitzchaik-a32a921a7/" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+					<li><a href="https://github.com/JonIzaki?tab=repositories" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+					<li><a href=mailto:"j.yitzchaik@gmail.com" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+				</ul>
+				<ul class="copyright">
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

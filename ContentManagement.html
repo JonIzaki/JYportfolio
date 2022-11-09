@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<!--
+	Landed by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Content management overview</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+			<header id="header">
+				<h1 id="logo">
+				</h1>
+				
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						
+						<li>
+							<a href="#">Synthetik2</a>
+							<ul>
+								<li><a href="Synthetik2Overview.html">Overview</a></li>
+								<li><a href="ContentManagement.html">Content Management</a></li>
+								<li><a href="ProjectileSystem.html">Projectile System</a></li>
+								<li><a href="Synthetik2UI.html">UI</a></li>
+							</ul>
+						</li>
+
+						<li>
+							<a href="IntelExperience.html">Intel</a>
+						</li>
+
+						<li></li>
+
+					</ul>
+				</nav>
+			</header>
+
+			<!-- Main -->
+				<div id="main" class="wrapper style1">
+					<div class="container">
+						<header class="major">
+							<h2>Content management</h2>
+							<p>A bit about the content management system and tools I developed for “FlowFireGames”  used in "Synthetik2" by the development team and game modders</p>
+						</header>
+
+						<!-- Content -->
+							<section id="content">
+								<a href="#" class="image fit"><img src="images/UniverseEditSearch2.png" alt="" /></a>
+								
+								<h3>The Goal</h3>
+								<p>
+									One of the main goals of the engineering team developing Synthetik2 was to simplify the content creation process both for our designers, and game modders.
+									We realized the importance of such a process as the game is heavy on content that needs testing and balancing - such as weapons, items, player\enemy classes etc. - and exposing this to our game modders was important as modding is one of the main selling points of the game.
+									We decided to create a content management system which we will be using, and expose the same tools we used during development to the modders.
+									Our configurable content management system design, which was led by the studio's CEO in collaboration with me and a senior developer colleague,  was simple yet powerful as it provided a clear workflow and a set of tools which can be used over multiple games.
+									The base idea is that whenever an engineer develops a feature that needs to be exposed to designers he separates the configurable data he wishes to expose into a serializable C# class which we named “configuration”, or in short “config”.
+									Upon pushing the newly created C# config class to the games repository it will be then immediately exposed to the game designers to instantiate and manipulate using the powerful tool called “UniversEdit”. <br>
+									This whole system, from managing the configs database at runtime through the tools which exposes UI to manipulate the configs and assets to the integration of mod.io platform which enables users the ability to share their own configurations with the community was architected and implemented by me.<br>
+									I really enjoyed developing the UniverseEdit tool which presented me with working with advanced concepts such as reflection and serialization, while creating a massive amount of UI, and I would like to share some of its features.
+								</p>
+
+								</p>
+								<h3>UniverseEdit</h3>
+								<p>
+									The UniversEdit uses the powers of C sharp's reflection in various ways, and I would like to shed light on the way I designed the dynamic UI generation system. 
+									Reflection provides the ability to parse the fields of C# classes, which allowed me to iterate on the configuration's fields and generate their appropriate UI.
+
+									We can take the currency system I implemented as a simple example. The “CurrencyConfiguration” includes the following data: <br>
+									<pre><code>ConfigID CurrencyIcon;	\\ a reference to a currency icon asset configuration <br>bool IsOutgameCurrency;	\\ is this currency used in meta progression?</code></pre>
+									Immediately as I finished the currency system and pushed my changes to our repository, a designer would be able to see the new configuration type and open it for editing. 
+									The UniversEdit tool doesn't need to have any hard coded reference to the newly created configuration, as its type is present in the assembly and therefore exposed for the tool through reflection.
+									Therefore the designer can create a new currency configuration, set its desired data and reference the newly created config to any system he chooses, for example as a boss reward.<br>
+									<br>
+									<div class="video-wrap">
+										<div class="overlay">
+											<p>Here you can see an example where I created new currency config using another config as template:</p>
+										</div>
+										<video id="slide-video" controls width="100%" height="auto" onclick="playPause();" autoplay="true" poster="{% static 'images/endscreen.webm'%}" preload="auto" loop muted>
+											<source src="images/NewCurrencyCreated.webm" type='video/webm' />
+										</video>
+										
+									</div>
+									<br>
+									As I approach designing the system I marked two extension functionalities it should support. 
+									The first is through creating new ways of displaying the parsed configuration, 
+									as the default list-like presentation might not work for more complex configurations.
+									<br>
+									We can see for example the difference between the action editor and floor editor: 
+									<br>
+									<br>
+									<div class="box alt">
+										<div class="row gtr-50 gtr-uniform">
+											<div class="col-4 col-6-xsmall"><span class="image fit"><img src="images/ActionEditor.jpg" alt="" />Action Configuration UI</span></div>
+											<div class="col-4 col-6-xsmall"><span class="image fit"><img src="images/FloorConfig.jpg" alt="" />Floor Configuration UI</span></div>
+										</div>
+									</div>
+									<br>
+									The second tool extension I implemented is adding support for previously unsupported types, such was the case with animationCurve type that a colleague wanted to add, or adding alternative UI for an already supported type. 
+									For this I used the factory pattern which provided a clear abstraction and an easy workflow for fellow colleagues to introduce their new UI into the tool. 
+									Each config member type can have one default UI it generates, for example a float will have a simple input field as its default UI, but one can extend the editor with an option to set a float with a slider UI that is bound by a certain range. 
+									For the workflow of setting the desired field UI I got inspired by Unity's workflow of parsing fields with way to set
+									These specific UI implementations can be set easily using a specific attribute much like Unity uses in its editor.
+									For example:
+									<pre><code>[Range(0,1)]<br>float gravityMultiplier;</code></pre>
+									<a href="#" class="image fit"><img src="images/FloatUITypes.jpg" alt="" />Example of an ammo configuration with different float UI generated</a>
+									<br>
+
+									Here I've only scratched the surface of this amazing tool and its design but I promise you that developing it proved challenging in many areas that required unique solutions.<br>
+									If you want to inquire more about the serialization solution, QOL features, how we made modding work or anything else please don't hesitate to contact me! (Or buy synthetik2 and create a new mod :) )<br>
+									<br>
+									<a href="#" class="image fit"><img src="images/ModBrowser.jpg" alt="" />The Mod Browser</a>
+								</p>
+
+							</section>
+
+
+					</div>
+				</div>
+
+			<!-- Footer -->
+			<footer id="footer">
+				<ul class="icons">
+					<li><a href="https://www.linkedin.com/in/jonathan-yitzchaik-a32a921a7/" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+					<li><a href="https://github.com/JonIzaki?tab=repositories" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+					<li><a href=mailto:"j.yitzchaik@gmail.com" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>
+				</ul>
+				<ul class="copyright">
+					<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				</ul>
+			</footer>
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
